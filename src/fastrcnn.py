@@ -23,9 +23,15 @@ def load_modelFastRCNN(model_ckpt: str, device: str) -> torch.nn.Module:
     in_features = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
-    model.to(device)
-    state_dict = torch.load(model_ckpt, map_location=device)['model_ckpt']
-    model.load_state_dict(state_dict)
+    try: 
+        model.to(device)
+        state_dict = torch.load(model_ckpt, map_location=device)['model_ckpt']
+        model.load_state_dict(state_dict)
+    except:
+        model.to(device)
+        state_dict = torch.load(model_ckpt, map_location=device)
+        model.load_state_dict(state_dict)
+
 
     return model
 

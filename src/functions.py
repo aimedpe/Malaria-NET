@@ -127,7 +127,7 @@ def predictionResNet(model_ckpt: str,
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    model = load_resnet50(n_classes,False,model_ckpt,device)
+    model = load_resnet50(n_classes,model_ckpt,device)
 
     predictions = []
     candidates = []
