@@ -50,26 +50,25 @@ def get_args():
 def get_prediction_patient(n_folder: str, args: argparse.Namespace):
 
     '''
-    Calcula los scores de falciparum,vivax y uninfected en un único paciente
+    Calculate the scores for P. falciparum, P. vivax, and uninfected in a single patient.
 
     Parameters:
     -----------
 
-    n_folder (str) : Dirección de la carpeta del paciente
+    n_folder (str): Path to the patient's folder.
 
-    args: Argumentos del archivo
-    
+    args: Arguments from the file.
+
     Returns:
     -------
 
-    final_result (str) : El resultado de diagnóstico del paciente
-    
-    pv_patient_score (float) : El score obtenido en P.vivax
+    final_result (str): The diagnostic result of the patient.
 
-    pf_patient_score (float) : El score obtenido en P.falciparum
+    pv_patient_score (float): The score obtained for P. vivax.
 
-    u_patients_score (float) : El score obtenido como no infectado
-    
+    pf_patient_score (float): The score obtained for P. falciparum.
+
+    u_patients_score (float): The score obtained as uninfected.
     '''
 
     images_patient = os.listdir(n_folder)
@@ -214,7 +213,7 @@ if __name__=='__main__':
 
     results_path = os.path.join("results",args.name_results)
 
-    logging.info(f"Generando los resultados en: {results_path}")
+    logging.info(f"Saving the results in: {results_path}")
 
     results_df.to_csv(results_path)
     
