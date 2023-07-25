@@ -111,7 +111,6 @@ Malaria-NET/
 |   |-- resnet.py          # ResNet-50 model implementation
 |   |-- fastrcnn.py        # Faster R-CNN model implementation
 |   |-- process_image.py   # Script for image processing in Malaria-NET
-|-- notebooks/             # Jupyter notebooks for demonstration and usage examples
 |-- README.md              # Project documentation and instructions
 |-- LICENSE                # License information
 ```
