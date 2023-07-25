@@ -3,7 +3,7 @@ from torchvision.transforms import Compose,Normalize,ToTensor
 
 import numpy as np
 from PIL import Image
-from typing import List,Tuple,Dict
+from typing import List,Dict,Tuple
 
 import src.process_image as PI
 from src.resnet import load_resnet50
@@ -11,7 +11,7 @@ from src.fastrcnn import load_modelFastRCNN,get_bboxes_output
 
 
 
-def return_predictionsFastrcnn(model: torch.nn.Module, image: Image.Image, device: str) -> Tuple(List[np.ndarray],np.ndarray):
+def return_predictionsFastrcnn(model: torch.nn.Module, image: Image.Image, device: str) -> Tuple[List[np.ndarray],np.ndarray]:
     """
     Perform inference using a Faster R-CNN model to detect objects in an image.
 
@@ -65,7 +65,7 @@ def return_predictionsFastrcnn(model: torch.nn.Module, image: Image.Image, devic
 
 
 
-def predictionFastrcnn(model_ckpt:str, k_image:str) -> Tuple(List[np.ndarray],List[np.ndarray]):
+def predictionFastrcnn(model_ckpt:str, k_image:str) -> Tuple[List[np.ndarray],List[np.ndarray]]:
 
     """
     Perform object detection using a Faster R-CNN model on an image.
@@ -106,7 +106,7 @@ def predictionFastrcnn(model_ckpt:str, k_image:str) -> Tuple(List[np.ndarray],Li
 def predictionResNet(model_ckpt: str, 
                      n_classes: int, 
                      n_images: List[np.ndarray], 
-                     n_bboxes: List[np.ndarray])->Tuple(List[np.ndarray],List[np.ndarray],List[np.ndarray]):
+                     n_bboxes: List[np.ndarray])->Tuple[List[np.ndarray],List[np.ndarray],List[np.ndarray]]:
     """
     Perform image classification using a ResNet-50 model on a list of images.
 
@@ -198,7 +198,7 @@ def process_results(results_falciparum: Dict,
                     results_vivax: Dict, 
                     results_duplicates: List, 
                     thres_fal: int = 5, 
-                    thres_viv: int = 2)-> Tuple(int,int):
+                    thres_viv: int = 2)-> Tuple[int,int]:
     
     """
     Process the results from multiple classifications for Plasmodium falciparum and Plasmodium vivax.
@@ -239,7 +239,7 @@ def process_results(results_falciparum: Dict,
 
     return pf,pv
 
-def process_probs_to_results(probabilities: List[np.ndarray]) -> Tuple(float,float,Dict,Dict):
+def process_probs_to_results(probabilities: List[np.ndarray]) -> Tuple[float,float,Dict,Dict]:
     """
     Process probabilities to determine results for Plasmodium falciparum and Plasmodium vivax.
 
@@ -279,7 +279,7 @@ def process_probs_to_results(probabilities: List[np.ndarray]) -> Tuple(float,flo
         return 0, 0, results_falciparum, results_vivax
 
 
-def process_probsResNet(probabilities: List[np.ndarray]) -> Tuple(float,float):
+def process_probsResNet(probabilities: List[np.ndarray]) -> Tuple[float,float]:
     """
     Process probabilities to determine the average probabilities for Plasmodium falciparum and Plasmodium vivax.
 
@@ -311,7 +311,6 @@ def process_probsResNet(probabilities: List[np.ndarray]) -> Tuple(float,float):
     return avg_prob_f, avg_prob_v
 
 
-
 def process_probsResNet_duplicates(probabilities: List[np.ndarray]):
     """
     Process probabilities to determine the results for duplicates based on Plasmodium falciparum and Plasmodium vivax.
@@ -338,7 +337,10 @@ def process_probsResNet_duplicates(probabilities: List[np.ndarray]):
     return results
 
 
-def filtering_duplicates(falciparum_bboxes, candidates_falciparum, vivax_bboxes, candidates_vivax):
+def filtering_duplicates(falciparum_bboxes: List[np.ndarray], 
+                         candidates_falciparum: List[np.ndarray], 
+                         vivax_bboxes: List[np.ndarray], 
+                         candidates_vivax:List[np.ndarray]):
     """
     Filter and find duplicate images and bounding boxes between Plasmodium falciparum and Plasmodium vivax.
 

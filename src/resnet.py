@@ -4,8 +4,24 @@ from torchvision.models import ResNet50_Weights
 from torchvision.models import resnet50
 
 
-def load_resnet50(num_classes:int ,pretrained=False,ckpt: str = None,device: str = 'cpu'):
-    
+def load_resnet50(num_classes: int, pretrained: bool = False, ckpt: str = None, device: str = 'cpu') -> torch.nn.Module:
+    """
+    Load a ResNet-50 model with a custom number of output classes and pre-trained weights.
+
+    Parameters:
+    -----------
+    num_classes (int): Number of output classes for the custom classifier.
+    pretrained (bool, optional): If True, load the model with pre-trained weights. Default is False.
+    ckpt (str, optional): File path to the model checkpoint containing the pre-trained weights.
+                          If provided, the model will be loaded from the checkpoint. Default is None.
+    device (str, optional): Device to which the model will be moved, e.g., 'cpu' or 'cuda'. Default is 'cpu'.
+
+    Returns:
+    -------
+    torch.nn.Module: Loaded ResNet-50 model with a custom classifier and pre-trained weights (if applicable).
+
+    """
+ 
     if pretrained: model = resnet50(weights = ResNet50_Weights)
     else: model = resnet50(weights=None)
 

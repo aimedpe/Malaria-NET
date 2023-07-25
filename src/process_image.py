@@ -1,26 +1,30 @@
 from PIL import Image,ImageDraw
 import numpy as np
 from skimage.measure import label, regionprops
-from typing import List
+from typing import List,Tuple
 import cv2
 
 
 
 def crop_sample_image(image: np.ndarray, alpha: int) -> np.ndarray:
-    
-    '''
+
+    """
+    Crop the main object from the input image based on a specified alpha value.
+
     Parameters:
     -----------
-
-    image: Toma la imagen de la muestra de sangre sin procesar; es decir, con todos los bordes.
-    alpha: Parámetro para crear una máscara que mostrará el borde de la muestra.
+    image (np.ndarray): Input image represented as a NumPy array.
+    alpha (int): Threshold value for alpha (transparency) channel of the image.
 
     Returns:
-    --------
+    -------
+    np.ndarray: Cropped image containing the main object based on the specified alpha threshold.
 
-    new_image: Es la muestra recortada; es decir, sin bordes oscuros. Basicamente un circulo inscrito en un cuadrado.
-    
-    '''
+    Raises:
+    ------
+    AssertionError: If more than one object is found in the image or no object is found.
+
+    """
 
     mask = (image[:,:,0]>alpha).astype('uint8')
     mask = np.array(mask)
@@ -46,13 +50,25 @@ def crop_sample_image(image: np.ndarray, alpha: int) -> np.ndarray:
 
     return new_image
  
+def draw_bounding_boxes(image: np.ndarray, bboxes: List[Tuple]) -> Image.Image:
+    """
+    Draw bounding boxes on an image.
 
-def draw_bounding_boxes(image:np.ndarray, bboxes:list[tuple]) -> Image.Image:
+    Parameters:
+    -----------
+    image (np.ndarray): Input image represented as a NumPy array.
+    bboxes (list of tuples): List of bounding box tuples (xmin, ymin, xmax, ymax)
+                             specifying the coordinates of the bounding boxes.
+
+    Returns:
+    -------
+    Image.Image: An image with bounding boxes drawn around the specified regions.
+
+    """
 
     pil_image = Image.fromarray(image)
     draw = ImageDraw.Draw(pil_image)
     for bbox in bboxes:
-        min_row, min_col, max_row, max_col = bbox
         xmin,ymin,xmax,ymax = bbox  
         draw.rectangle((xmin, ymin, xmax, ymax), outline="green", width=7)
     output_image = np.array(pil_image)
@@ -61,20 +77,45 @@ def draw_bounding_boxes(image:np.ndarray, bboxes:list[tuple]) -> Image.Image:
     return output_image
 
 
-def get_cell_images_fastrcnn(image: np.ndarray,bboxes: list) -> List[np.ndarray]:
+def get_cell_images_fastrcnn(image: np.ndarray, bboxes: List[np.ndarray]) -> List[np.ndarray]:
 
-   cells = []
+    """
+    Extract cell images from the input image based on the specified bounding boxes.
 
-   for b in bboxes:
-        xmin,ymin,xmax,ymax = b  
-        cell = image[int(ymin):int(ymax),int(xmin):int(xmax),:]
-        cells.append(cell)
+    Parameters:
+    -----------
+    image (np.ndarray): Input image represented as a NumPy array.
+    bboxes (List[np.ndarray]): List of bounding boxes (tuples) specifying the regions of interest.
 
-   return cells
+    Returns:
+    -------
+    List[np.ndarray]: A list of cell images extracted from the input image based on the bounding boxes.
+
+    """
+
+    cells = []
+
+    for b in bboxes:
+         xmin,ymin,xmax,ymax = b  
+         cell = image[int(ymin):int(ymax),int(xmin):int(xmax),:]
+         cells.append(cell)
+
+    return cells
 
 
-def get_bounding_boxes_fastrcnn(mask:np.ndarray) -> List[tuple]:
-    
+def get_bounding_boxes_fastrcnn(mask: np.ndarray) -> List[Tuple]:
+    """
+    Get bounding boxes from a binary mask using region labeling.
+
+    Parameters:
+    -----------
+    mask (np.ndarray): Binary mask representing the regions of interest.
+
+    Returns:
+    -------
+    List[Tuple]: A list of bounding box tuples (xmin, ymin, xmax, ymax) extracted from the mask.
+    """
+  
     labeled = label(mask)
     props = regionprops(labeled)
     bboxes = []
@@ -83,7 +124,20 @@ def get_bounding_boxes_fastrcnn(mask:np.ndarray) -> List[tuple]:
         bboxes.append((xmin, ymin, xmax, ymax))
     return bboxes
 
-def get_processed_bboxes(bboxes,size_image):
+def get_processed_bboxes(bboxes: List[Tuple], size_image: Tuple) -> List[Tuple]:
+    """
+    Process bounding boxes to fit within the specified image size.
+
+    Parameters:
+    -----------
+    bboxes (list of tuples): List of bounding box tuples (xmin, ymin, xmax, ymax).
+    size_image (Tuple): Size of the target image in the format (width, height).
+
+    Returns:
+    -------
+    List[Tuple]: A list of processed bounding box tuples that fit within the specified image size.
+
+    """
 
     mask = np.zeros(size_image)#en formato numpy el size
 
@@ -101,26 +155,60 @@ def get_processed_bboxes(bboxes,size_image):
     return bboxes_processed
 
 
-def calculate_iou(box_a, box_b):
-    # Coordenadas de la intersección
+def calculate_iou(box_a: np.ndarray, box_b: np.ndarray) -> float:
+    """
+    Calculate the Intersection over Union (IoU) between two bounding boxes.
+
+    Parameters:
+    -----------
+    box_a (np.ndarray): Bounding box coordinates (x_min, y_min, x_max, y_max) of the first box.
+    box_b (np.ndarray): Bounding box coordinates (x_min, y_min, x_max, y_max) of the second box.
+
+    Returns:
+    -------
+    float: The Intersection over Union (IoU) score between the two bounding boxes.
+
+    """
+
     x_min = max(box_a[0], box_b[0])
     y_min = max(box_a[1], box_b[1])
     x_max = min(box_a[2], box_b[2])
     y_max = min(box_a[3], box_b[3])
 
-    # Área de la intersección
+    
     intersection_area = max(0, x_max - x_min + 1) * max(0, y_max - y_min + 1)
 
-    # Área de las bounding boxes
+    
     area_a = (box_a[2] - box_a[0] + 1) * (box_a[3] - box_a[1] + 1)
     area_b = (box_b[2] - box_b[0] + 1) * (box_b[3] - box_b[1] + 1)
 
-    # Índice de intersección sobre unión (IoU)
     iou = intersection_area / float(area_a + area_b - intersection_area)
 
     return iou
 
-def find_duplicate_bounding_boxes(bounding_boxes1,candidates1,bounding_boxes2,candidates2,alpha=0.5):
+def find_duplicate_bounding_boxes(bounding_boxes1: List[np.ndarray], 
+                                  candidates1: List[np.ndarray], 
+                                  bounding_boxes2: List[np.ndarray], 
+                                  candidates2: List[np.ndarray], 
+                                  alpha: float = 0.5) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    """
+    Find duplicate bounding boxes between two sets of bounding boxes and their corresponding candidates.
+
+    Parameters:
+    -----------
+    bounding_boxes1 (list): List of bounding box tuples (x_min, y_min, x_max, y_max) from the first set.
+    candidates1 (list): List of candidate images corresponding to the bounding boxes in bounding_boxes1.
+    bounding_boxes2 (list): List of bounding box tuples (x_min, y_min, x_max, y_max) from the second set.
+    candidates2 (list): List of candidate images corresponding to the bounding boxes in bounding_boxes2.
+    alpha (float, optional): Threshold value for Intersection over Union (IoU) to consider as duplicates.
+                             Default is 0.5.
+
+    Returns:
+    -------
+    tuple[list, list]: A tuple containing lists of duplicate images and their corresponding bounding boxes.
+
+    """
+
 
     duplicate_boxes = []
     duplicate_images = []
@@ -128,7 +216,7 @@ def find_duplicate_bounding_boxes(bounding_boxes1,candidates1,bounding_boxes2,ca
         for j,box2 in enumerate(bounding_boxes2):
             iou = calculate_iou(box1, box2)
             if iou > alpha:
-                # Determinar el bounding box con mayor área
+                
                 area_box1 = (box1[2] - box1[0]) * (box1[3] - box1[1])
                 area_box2 = (box2[2] - box2[0]) * (box2[3] - box2[1])
 
