@@ -1,0 +1,1 @@
+The models of Faster R-CNN and ResNet50 must be saved here
