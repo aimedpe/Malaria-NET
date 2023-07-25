@@ -2,9 +2,11 @@ import os
 from os.path import join
 import argparse
 import logging
-from src import functions
 import pandas as pd
 from tqdm import tqdm
+
+from src import functions
+
 
 
 def get_args():
