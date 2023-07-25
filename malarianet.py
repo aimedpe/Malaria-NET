@@ -6,27 +6,6 @@ from src import functions
 import pandas as pd
 from tqdm import tqdm
 
-'''
-MAIN SOFTWARE OF MALARIA DATASET:
-
-Format of the folder
-
-/patients
-    /P001
-        /img1.png
-        /img2.png
-        .
-        .
-        .
-        /imgk.png
-    /P002
-    /P003
-    .
-    .
-    .
-    /P00N
-'''
-
 
 def get_args():
 

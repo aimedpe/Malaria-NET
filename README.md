@@ -51,15 +51,32 @@ cd Malaria-NET
 
 ## Usage
 
-To use the Malaria-NET for cell detection and classification, follow these steps:
+To use Malaria-NET for cell detection and classification, follow these steps:
 
-1. Prepare your dataset with annotated bounding boxes for the malaria-infected cells.
+1. Place patient folders with their respective images inside the 'data' folder. The folder structure should be as follows:
 
-2. Train the Faster R-CNN model using the provided training script or load a pre-trained model.
+```
+|-- data/
+    |-- P001/
+        |-- img1.png
+        |-- img2.png
+            .
+            .
+            .
+        |-- imgk.png
+    |-- P002/
+    |-- P003/
+        .
+        .
+        .
+    |-- P00N/
+```
 
-3. Use the trained model for inference on new images to detect and classify malaria-infected cells.
+2. Store Faster R-CNN and ResNet models inside the 'models' folder.
 
-For detailed usage instructions, refer to the documentation and example notebooks provided in the project.
+3. Run the Python script as follows: ```python malarianet.py -nr [name of the results]```
+
+4. The results will be saved in a .csv file inside the 'results' folder.
 
 ## Project Structure
 
