@@ -106,11 +106,11 @@ Malaria-NET/
     |-- ResNet/            # Instanes of Resnet50 models for P.falciparum, P.vivax and P.falciparum against P.vivax
 |-- results/               # Results directory (results saved here)
 |-- src/                   # Source code directory
-|   |-- functions.py       # Utility functions for data processing and visualization
+    |-- __init__.py        # Use src as a module
+    |-- functions.py       # Utility functions for data processing and visualization
 |   |-- resnet.py          # ResNet-50 model implementation
 |   |-- fastrcnn.py        # Faster R-CNN model implementation
-|   |-- train.py           # Script for training the model
-|   |-- predict.py         # Script for making predictions using the trained model
+|   |-- process_image.py   # Script for image processing in Malaria-NET
 |-- notebooks/             # Jupyter notebooks for demonstration and usage examples
 |-- README.md              # Project documentation and instructions
 |-- LICENSE                # License information
