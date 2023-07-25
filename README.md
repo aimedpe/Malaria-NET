@@ -49,6 +49,22 @@ cd Malaria-NET
 
 3. Install the dependencies as mentioned in the [Dependencies](#dependencies) section.
 
+4. To remove the example patient in `data/patient` and create the model directories, you can use the script `initialize.sh`. Simply run the following command:
+
+```bash
+bash initialize.sh
+```
+
+This will remove the example patient data and create the necessary model directories, such as `FastRCNN` and `ResNet`. 
+
+Alternatively, if you prefer to do it manually, follow these steps:
+
+1. Delete the example patient data located in the `data/patient` directory.
+
+2. Create the model directories `FastRCNN` and `ResNet` in the `models` directory.
+
+Now you can proceed with your project using the modified data and model directories.
+
 ## Usage
 
 To use Malaria-NET for cell detection and classification, follow these steps:
