@@ -15,13 +15,20 @@ def get_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--patients_dir','-p',type=str,default=join(actual,'data'),metavar=' ',help="File path to the patients' folder in the specified format")
-    parser.add_argument('--fastrcnn_falciparum','-ff',type=str,default=join(actual,'models','FastRCNN','FP_FRCNN.pth'),metavar=' ',help='File path to fp_frcnn model')
-    parser.add_argument('--fastrcnn_vivax','-fv',type=str,default=join(actual,'models','FastRCNN','VV_FRCNN.pth'),metavar=' ',help='File path to vv_frcnn model')
-    parser.add_argument('--resnet_falciparum','-rf',type=str,default=join(actual,'models','ResNet','FP_RESNET.pth'),metavar=' ',help='File path to fp_resnet model')
-    parser.add_argument('--resnet_vivax','-rv',type=str,default=join(actual,'models','ResNet','VV_RESNET.pth'),metavar=' ',help='File path to vv_resnet model')
-    parser.add_argument('--resnet_last','-rfv',type=str,default=join(actual,'models','ResNet','FP_VV_RESNET.pth'),metavar=' ',help='File path to fp_vv_resnet model')
-    parser.add_argument('--name_results','-nr',type=str,default='results.csv',metavar=' ',help='File path to the folder where the results will be stored')
+    parser.add_argument('--patients_dir','-p',type=str,default=join(actual,'data'),metavar=' ',
+                        help="File path to the patients' folder in the specified format")
+    parser.add_argument('--fastrcnn_falciparum','-ff',type=str,default=join(actual,'models','FastRCNN','FP_FRCNN.pth'),metavar=' ',
+                        help='File path to fp_frcnn model')
+    parser.add_argument('--fastrcnn_vivax','-fv',type=str,default=join(actual,'models','FastRCNN','VV_FRCNN.pth'),metavar=' ',
+                        help='File path to vv_frcnn model')
+    parser.add_argument('--resnet_falciparum','-rf',type=str,default=join(actual,'models','ResNet','FP_RESNET.pth'),metavar=' ',
+                        help='File path to fp_resnet model')
+    parser.add_argument('--resnet_vivax','-rv',type=str,default=join(actual,'models','ResNet','VV_RESNET.pth'),metavar=' ',
+                        help='File path to vv_resnet model')
+    parser.add_argument('--resnet_last','-rfv',type=str,default=join(actual,'models','ResNet','FP_VV_RESNET.pth'),metavar=' ',
+                        help='File path to fp_vv_resnet model')
+    parser.add_argument('--name_results','-nr',type=str,default='results.csv',metavar=' ',
+                        help='File path to the folder where the results will be stored')
 
     args = parser.parse_args()
 
